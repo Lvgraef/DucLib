@@ -14,6 +14,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import org.apache.logging.log4j.LogManager;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -36,6 +37,9 @@ public abstract class BaseDucModel extends Model {
      */
     static LakeDefinition generateLakeDefinition(ResourceLocation entity){
         GeometryHolder holder = DucLibModelLoader.getModel(entity);
+        if (holder == null) {
+            LogManager.getLogger().error(entity.toString() + " Has a null holder.");
+        }
         Geometry geometry = holder.geometry()[0];
         List<Bone> bones = Arrays.stream(geometry.bones()).collect(Collectors.toCollection(ArrayList::new));
         PondDefinition pondDefinition = new PondDefinition();
@@ -49,7 +53,7 @@ public abstract class BaseDucModel extends Model {
         }
         int count = 0;
 
-        generateLakeDefinitionRecursively("dl_top_root", count, bones, topRoot, new float[]{0, 24, 0}, bones.stream().noneMatch(bone -> bone.cubes() != null && bone.cubes()[0].uv().left().isPresent()));
+        generateLakeDefinitionRecursively("dl_top_root", count, bones, topRoot, new float[]{0, 24, 0});
 
         return LakeDefinition.create(pondDefinition, geometry.description().textureWidth(), geometry.description().textureHeight());
     }
@@ -57,19 +61,19 @@ public abstract class BaseDucModel extends Model {
     /**
      * helper method for generating a DuclingDefinition from a json file
      */
-    private static DuclingDefinition generateLakeDefinitionRecursively(String parent, int count, List<Bone> bones, DuclingDefinition parentDucling, float[] offset, boolean boxUV){
+    private static DuclingDefinition generateLakeDefinitionRecursively(String parent, int count, List<Bone> bones, DuclingDefinition parentDucling, float[] offset){
         for (Bone bone : bones) {
             if (bone.parent().equals(parent)){
-                DuclingDefinition parentDef = parentDucling.addOrReplaceChild(bone.name(), createWings(bone, new float[]{bone.pivot()[0], bone.pivot()[1], bone.pivot()[2]}, boxUV), PartPose.offsetAndRotation(bone.pivot()[0] - offset[0], -(bone.pivot()[1] - offset[1]), bone.pivot()[2] - offset[2], Mth.DEG_TO_RAD * bone.rotation()[0], Mth.DEG_TO_RAD * bone.rotation()[1], Mth.DEG_TO_RAD * bone.rotation()[2]));
+                DuclingDefinition parentDef = parentDucling.addOrReplaceChild(bone.name(), createWings(bone, new float[]{bone.pivot()[0], bone.pivot()[1], bone.pivot()[2]}), PartPose.offsetAndRotation(bone.pivot()[0] - offset[0], -(bone.pivot()[1] - offset[1]), bone.pivot()[2] - offset[2], Mth.DEG_TO_RAD * bone.rotation()[0], Mth.DEG_TO_RAD * bone.rotation()[1], Mth.DEG_TO_RAD * bone.rotation()[2]));
                 if (bone.cubes() != null) {
                     for (Cube cube : bone.cubes()) {
                         if (cube.rotation() != null) {
-                            parentDef.addOrReplaceChild("cube_" + count, createWings(new Bone("cube_" + count, bone.name(), new float[]{}, null, new Cube[]{new Cube(cube.origin(), cube.size(), null, null, cube.inflate(), cube.uv(), cube.mirror())}), new float[]{cube.pivot()[0], cube.pivot()[1], cube.pivot()[2]}, boxUV), PartPose.offsetAndRotation(cube.pivot()[0] - bone.pivot()[0], bone.pivot()[1] - cube.pivot()[1], cube.pivot()[2] - bone.pivot()[2], Mth.DEG_TO_RAD * cube.rotation()[0], Mth.DEG_TO_RAD * cube.rotation()[1], Mth.DEG_TO_RAD * cube.rotation()[2]));
+                            parentDef.addOrReplaceChild("cube_" + count, createWings(new Bone("cube_" + count, bone.name(), new float[]{}, null, new Cube[]{new Cube(cube.origin(), cube.size(), null, null, cube.inflate(), cube.uv(), cube.mirror())}), new float[]{cube.pivot()[0], cube.pivot()[1], cube.pivot()[2]}), PartPose.offsetAndRotation(cube.pivot()[0] - bone.pivot()[0], bone.pivot()[1] - cube.pivot()[1], cube.pivot()[2] - bone.pivot()[2], Mth.DEG_TO_RAD * cube.rotation()[0], Mth.DEG_TO_RAD * cube.rotation()[1], Mth.DEG_TO_RAD * cube.rotation()[2]));
                             count++;
                         }
                     }
                 }
-                generateLakeDefinitionRecursively(bone.name(), count, bones, parentDef, new float[]{bone.pivot()[0], bone.pivot()[1], bone.pivot()[2]}, boxUV);
+                generateLakeDefinitionRecursively(bone.name(), count, bones, parentDef, new float[]{bone.pivot()[0], bone.pivot()[1], bone.pivot()[2]});
             }
         }
         return parentDucling;
@@ -78,12 +82,12 @@ public abstract class BaseDucModel extends Model {
     /**
      * Deserialize all the wings from the json file to java code.
      */
-    private static WingListBuilder createWings(Bone bone, float[] offset, boolean boxUV){
+    private static WingListBuilder createWings(Bone bone, float[] offset){
         WingListBuilder builder = WingListBuilder.create();
         if (bone.cubes() != null) {
             for (Cube cube : bone.cubes()) {
                 if (cube.rotation() == null) {
-                    if (!boxUV) {
+                    if (cube.uv().left().isPresent()) {
                         builder.mirror(cube.mirror()).addBox(null, cube.origin()[0] - offset[0], -(cube.origin()[1] - offset[1] + cube.size()[1]), cube.origin()[2] - offset[2],
                                 cube.size()[0], cube.size()[1], cube.size()[2],
                                 new CubeDeformation(cube.inflate()), new AdvancedUV[]{

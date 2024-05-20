@@ -1,5 +1,6 @@
 package io.github.itskillerluc.duclib.client.animation;
 
+import cpw.mods.util.Lazy;
 import io.github.itskillerluc.duclib.data.animation.DucLibAnimationLoader;
 import io.github.itskillerluc.duclib.data.animation.serializers.Animation;
 import io.github.itskillerluc.duclib.data.animation.serializers.Bone;
@@ -9,7 +10,6 @@ import net.minecraft.client.animation.AnimationDefinition;
 import net.minecraft.client.animation.Keyframe;
 import net.minecraft.client.animation.KeyframeAnimations;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.common.util.Lazy;
 import org.joml.Vector3f;
 
 import java.util.*;

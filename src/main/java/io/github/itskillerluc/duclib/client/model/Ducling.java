@@ -1,15 +1,15 @@
 package io.github.itskillerluc.duclib.client.model;
 
-import io.github.itskillerluc.duclib.client.model.definitions.AdvancedUV;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import cpw.mods.util.Lazy;
+import io.github.itskillerluc.duclib.client.model.definitions.AdvancedUV;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.util.Lazy;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 import org.joml.*;
 
