@@ -3,17 +3,16 @@ plugins {
     id 'eclipse'
     id 'idea'
     id 'maven-publish'
-    id 'net.neoforged.gradle.userdev' version '7.0.109'
+    id 'net.neoforged.gradle.userdev' version '7.0.142'
 }
 
 
-version = '1.1.4'
+version = '1.2.0'
 group = 'io.github.itskillerluc.duclib' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = 'duclib-1.20.4-neoforge'
+archivesBaseName = 'duclib-1.21-neoforge'
 
 
-// Mojang ships Java 17 to end users in 1.18+, so your mod should target Java 17.
-java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 
 minecraft.accessTransformers.file rootProject.file('src/main/resources/META-INF/accesstransformer.cfg')
 
@@ -123,7 +122,7 @@ tasks.withType(ProcessResources).configureEach {
     ]
     inputs.properties replaceProperties
 
-    filesMatching(['META-INF/mods.toml']) {
+    filesMatching(['META-INF/neoforge.mods.toml']) {
         expand replaceProperties
     }
 }
@@ -154,7 +153,7 @@ publishing {
     }
     publications {
         mavenJava(MavenPublication) {
-            artifactId = 'duclib-1.20.4-neoforge'
+            artifactId = 'duclib-1.21-neoforge'
 
             artifact jar
             artifact sourcesJar

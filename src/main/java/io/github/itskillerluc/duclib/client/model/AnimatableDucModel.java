@@ -3,6 +3,9 @@ package io.github.itskillerluc.duclib.client.model;
 import io.github.itskillerluc.duclib.client.animation.AnimationHolder;
 import io.github.itskillerluc.duclib.client.animation.DucAnimation;
 import io.github.itskillerluc.duclib.entity.Animatable;
+import io.github.itskillerluc.duclib.util.IAdvancedKeyFrame;
+import net.minecraft.client.animation.AnimationChannel;
+import net.minecraft.client.animation.Keyframe;
 import net.minecraft.client.model.HierarchicalModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.RenderType;
@@ -11,10 +14,7 @@ import net.minecraft.world.entity.AnimationState;
 import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Function;
 
 /**
@@ -71,8 +71,16 @@ public class AnimatableDucModel <T extends Entity & Animatable<?>> extends Hiera
      */
     public static Map<String, AnimationState> createStateMap(DucAnimation animation){
         Map<String, AnimationState> states = new HashMap<>();
-        for (String key : animation.getAnimations().keySet()) {
-            states.put(key, new AnimationState());
+        for (Map.Entry<String, AnimationHolder> entry : animation.getAnimations().entrySet()) {
+            var state = new AnimationState();
+            states.put(entry.getKey(), state);
+            for (Map.Entry<String, List<AnimationChannel>> stringListEntry : entry.getValue().animation().boneAnimations().entrySet()) {
+                for (AnimationChannel animationChannel : stringListEntry.getValue()) {
+                    for (Keyframe keyframe : animationChannel.keyframes()) {
+                        ((IAdvancedKeyFrame) (Object) keyframe).setTimeSupplier(() -> state.getAccumulatedTime() / 1000d);
+                    }
+                }
+            }
         }
         return states;
     }

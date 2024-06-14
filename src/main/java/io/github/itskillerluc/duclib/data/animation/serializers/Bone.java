@@ -18,39 +18,31 @@ public record Bone(Map<String, KeyFrame> rotation, Map<String, KeyFrame> positio
             if (json.getAsJsonObject().get("rotation") != null) {
                 if (json.getAsJsonObject().get("rotation").isJsonObject()) {
                     for (Map.Entry<String, JsonElement> rotation : json.getAsJsonObject().get("rotation").getAsJsonObject().asMap().entrySet()) {
-                        rotations.put(rotation.getKey().equals("vector") ? "0.0" : rotation.getKey(), createFrame(rotation));
+                        rotations.put(rotation.getKey().equals("vector") ? "0.0" : rotation.getKey(), KeyFrame.deserialize(rotation.getValue()));
                     }
                 } else {
-                    rotations.put("0.0", new KeyFrame(null, new double[]{json.getAsJsonObject().get("rotation").getAsJsonArray().get(0).getAsDouble(), json.getAsJsonObject().get("rotation").getAsJsonArray().get(1).getAsDouble(), json.getAsJsonObject().get("rotation").getAsJsonArray().get(2).getAsDouble()}, "linear"));
+                    rotations.put("0.0", KeyFrame.deserialize(json.getAsJsonObject().get("rotation")));
                 }
             }
             if (json.getAsJsonObject().get("position") != null) {
                 if (json.getAsJsonObject().get("position").isJsonObject()) {
                     for (Map.Entry<String, JsonElement> position : json.getAsJsonObject().get("position").getAsJsonObject().asMap().entrySet()) {
-                        positions.put(position.getKey().equals("vector") ? "0.0" : position.getKey(), createFrame(position));
+                        positions.put(position.getKey().equals("vector") ? "0.0" : position.getKey(), KeyFrame.deserialize(position.getValue()));
                     }
                 } else {
-                    positions.put("0.0", new KeyFrame(null, new double[]{json.getAsJsonObject().get("position").getAsJsonArray().get(0).getAsDouble(), json.getAsJsonObject().get("position").getAsJsonArray().get(1).getAsDouble(), json.getAsJsonObject().get("position").getAsJsonArray().get(2).getAsDouble()}, "linear"));
+                    rotations.put("0.0", KeyFrame.deserialize(json.getAsJsonObject().get("position")));
                 }
             }
             if (json.getAsJsonObject().get("scale") != null) {
                 if (json.getAsJsonObject().get("scale").isJsonObject()) {
                     for (Map.Entry<String, JsonElement> scale : json.getAsJsonObject().get("scale").getAsJsonObject().asMap().entrySet()) {
-                        scales.put(scale.getKey().equals("vector") ? "0.0" : scale.getKey(), createFrame(scale));
+                        scales.put(scale.getKey().equals("vector") ? "0.0" : scale.getKey(), KeyFrame.deserialize(scale.getValue()));
                     }
                 } else {
-                    scales.put("0.0", new KeyFrame(null, new double[]{json.getAsJsonObject().get("scale").getAsJsonArray().get(0).getAsDouble(), json.getAsJsonObject().get("scale").getAsJsonArray().get(1).getAsDouble(), json.getAsJsonObject().get("scale").getAsJsonArray().get(2).getAsDouble()}, "linear"));
+                    rotations.put("0.0", KeyFrame.deserialize(json.getAsJsonObject().get("scale")));
                 }
             }
             return new Bone(rotations, positions, scales);
         }
-
-        private KeyFrame createFrame(Map.Entry<String, JsonElement> element) {
-            JsonObject object = new JsonObject();
-            object.add(element.getKey(), element.getValue());
-            return KeyFrame.deserialize(element.getValue());
-            /*return element.getValue().isJsonArray() ? new KeyFrame((element.getValue().getAsJsonArray().asList().stream().mapToDouble(JsonElement::getAsDouble).toArray()), "linear") :
-                    new KeyFrame(Optional.ofNullable(element.getValue().getAsJsonObject().get("vector")).orElse(element.getValue().getAsJsonObject().get("post")).getAsJsonArray().asList().stream().mapToDouble(JsonElement::getAsDouble).toArray(), element.getValue().getAsJsonObject().has("lerp_mode") ? element.getValue().getAsJsonObject().get("lerp_mode").getAsString() : "linear");
-        */}
     }
 }

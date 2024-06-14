@@ -2,7 +2,6 @@ package io.github.itskillerluc.duclib.client.model;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import cpw.mods.util.Lazy;
 import io.github.itskillerluc.duclib.client.model.definitions.AdvancedUV;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
@@ -10,6 +9,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.common.util.Lazy;
 import org.jetbrains.annotations.NotNull;
 import org.joml.*;
 
@@ -151,24 +151,24 @@ public final class Ducling extends ModelPart{
      */
     @Override
     public void render(@NotNull PoseStack pPoseStack, @NotNull VertexConsumer pVertexConsumer, int pPackedLight, int pPackedOverlay) {
-        this.render(pPoseStack, pVertexConsumer, pPackedLight, pPackedOverlay, 1.0F, 1.0F, 1.0F, 1.0F);
+        this.render(pPoseStack, pVertexConsumer, pPackedLight, pPackedOverlay, -1);
     }
 
     /**
      * render the ducling
      */
     @Override
-    public void render(@NotNull PoseStack pPoseStack, @NotNull VertexConsumer pVertexConsumer, int pPackedLight, int pPackedOverlay, float pRed, float pGreen, float pBlue, float pAlpha) {
+    public void render(@NotNull PoseStack pPoseStack, @NotNull VertexConsumer pVertexConsumer, int pPackedLight, int pPackedOverlay, int color) {
         if (this.visible) {
             if (!this.wings.isEmpty() || !this.children.isEmpty()) {
                 pPoseStack.pushPose();
                 this.translateAndRotate(pPoseStack);
                 if (!this.skipDraw) {
-                    this.compile(pPoseStack.last(), pVertexConsumer, pPackedLight, pPackedOverlay, pRed, pGreen, pBlue, pAlpha);
+                    this.compile(pPoseStack.last(), pVertexConsumer, pPackedLight, pPackedOverlay, color);
                 }
 
                 for(Ducling ducling : this.children.values()) {
-                    ducling.render(pPoseStack, pVertexConsumer, pPackedLight, pPackedOverlay, pRed, pGreen, pBlue, pAlpha);
+                    ducling.render(pPoseStack, pVertexConsumer, pPackedLight, pPackedOverlay, color);
                 }
 
                 pPoseStack.popPose();
@@ -212,9 +212,9 @@ public final class Ducling extends ModelPart{
     /**
      * render all the wings of this ducling
      */
-    private void compile(PoseStack.Pose pPose, VertexConsumer pVertexConsumer, int pPackedLight, int pPackedOverlay, float pRed, float pGreen, float pBlue, float pAlpha) {
+    private void compile(PoseStack.Pose pPose, VertexConsumer pVertexConsumer, int pPackedLight, int pPackedOverlay, int color) {
         for(Wing ducling$wing : this.wings) {
-            ducling$wing.compile(pPose, pVertexConsumer, pPackedLight, pPackedOverlay, pRed, pGreen, pBlue, pAlpha);
+            ducling$wing.compile(pPose, pVertexConsumer, pPackedLight, pPackedOverlay, color);
         }
 
     }
@@ -323,23 +323,23 @@ public final class Ducling extends ModelPart{
             Barb ducling$barb6 = new Barb(originX, y, z, 8.0F, 0.0F);
             int i = 0;
             Map<Direction, AdvancedUV> featherUVMap = Arrays.stream(featherUVs).collect(Collectors.toMap(AdvancedUV::direction, value -> value));
-            if (visibleFaces.contains(Direction.DOWN)) {
-                this.feathers[i++] = new Feather(new Barb[]{ducling$barb4, ducling$barb3, ducling$barb7, ducling$barb}, featherUVMap.get(Direction.UP).uv().u(), featherUVMap.get(Direction.UP).uv().v(), featherUVMap.get(Direction.UP).uv().u() + featherUVMap.get(Direction.UP).uvSize().u(), featherUVMap.get(Direction.UP).uv().v() + featherUVMap.get(Direction.UP).uvSize().v(), pTexWidthScaled, pTexHeightScaled, pMirror, Direction.DOWN);
-            }
             if (visibleFaces.contains(Direction.UP)) {
-                this.feathers[i++] = new Feather(new Barb[]{ducling$barb1, ducling$barb2, ducling$barb6, ducling$barb5}, featherUVMap.get(Direction.DOWN).uv().u(), featherUVMap.get(Direction.DOWN).uv().v(), featherUVMap.get(Direction.DOWN).uv().u() + featherUVMap.get(Direction.DOWN).uvSize().u(), featherUVMap.get(Direction.DOWN).uv().v() + featherUVMap.get(Direction.DOWN).uvSize().v(), pTexWidthScaled, pTexHeightScaled, pMirror, Direction.UP);
+                this.feathers[i++] = new Feather(new Barb[]{ducling$barb4, ducling$barb3, ducling$barb7, ducling$barb}, featherUVMap.get(Direction.UP).uv().u(), featherUVMap.get(Direction.UP).uv().v(), featherUVMap.get(Direction.UP).uv().u() + featherUVMap.get(Direction.UP).uvSize().u(), featherUVMap.get(Direction.UP).uv().v() + featherUVMap.get(Direction.UP).uvSize().v(), pTexWidthScaled, pTexHeightScaled, !pMirror, Direction.DOWN);
             }
-            if (visibleFaces.contains(Direction.WEST)) {
-                this.feathers[i++] = new Feather(new Barb[]{ducling$barb7, ducling$barb3, ducling$barb6, ducling$barb2}, featherUVMap.get(Direction.EAST).uv().u(), featherUVMap.get(Direction.EAST).uv().v(), featherUVMap.get(Direction.EAST).uv().u() + featherUVMap.get(Direction.EAST).uvSize().u(), featherUVMap.get(Direction.EAST).uv().v() + featherUVMap.get(Direction.EAST).uvSize().v(), pTexWidthScaled, pTexHeightScaled, pMirror, Direction.EAST);
-            }
-            if (visibleFaces.contains(Direction.NORTH)) {
-                this.feathers[i++] = new Feather(new Barb[]{ducling$barb, ducling$barb7, ducling$barb2, ducling$barb1}, featherUVMap.get(Direction.NORTH).uv().u(), featherUVMap.get(Direction.NORTH).uv().v(), featherUVMap.get(Direction.NORTH).uv().u() + featherUVMap.get(Direction.NORTH).uvSize().u(), featherUVMap.get(Direction.NORTH).uv().v() + featherUVMap.get(Direction.NORTH).uvSize().v(), pTexWidthScaled, pTexHeightScaled, pMirror, Direction.NORTH);
+            if (visibleFaces.contains(Direction.DOWN)) {
+                this.feathers[i++] = new Feather(new Barb[]{ducling$barb1, ducling$barb2, ducling$barb6, ducling$barb5}, featherUVMap.get(Direction.DOWN).uv().u(), featherUVMap.get(Direction.DOWN).uv().v(), featherUVMap.get(Direction.DOWN).uv().u() + featherUVMap.get(Direction.DOWN).uvSize().u(), featherUVMap.get(Direction.DOWN).uv().v() + featherUVMap.get(Direction.DOWN).uvSize().v(), pTexWidthScaled, pTexHeightScaled, !pMirror, Direction.UP);
             }
             if (visibleFaces.contains(Direction.EAST)) {
-                this.feathers[i++] = new Feather(new Barb[]{ducling$barb4, ducling$barb, ducling$barb1, ducling$barb5}, featherUVMap.get(Direction.WEST).uv().u(), featherUVMap.get(Direction.WEST).uv().v(), featherUVMap.get(Direction.WEST).uv().u() + featherUVMap.get(Direction.WEST).uvSize().u(), featherUVMap.get(Direction.WEST).uv().v() + featherUVMap.get(Direction.WEST).uvSize().v(), pTexWidthScaled, pTexHeightScaled, pMirror, Direction.WEST);
+                this.feathers[i++] = new Feather(new Barb[]{ducling$barb, ducling$barb4, ducling$barb5, ducling$barb1}, featherUVMap.get(Direction.EAST).uv().u(), featherUVMap.get(Direction.EAST).uv().v(), featherUVMap.get(Direction.EAST).uv().u() + featherUVMap.get(Direction.EAST).uvSize().u(), featherUVMap.get(Direction.EAST).uv().v() + featherUVMap.get(Direction.EAST).uvSize().v(), pTexWidthScaled, pTexHeightScaled, pMirror, Direction.WEST);
+            }
+            if (visibleFaces.contains(Direction.NORTH)) {
+                this.feathers[i++] = new Feather(new Barb[]{ducling$barb7, ducling$barb, ducling$barb1, ducling$barb2}, featherUVMap.get(Direction.NORTH).uv().u(), featherUVMap.get(Direction.NORTH).uv().v(), featherUVMap.get(Direction.NORTH).uv().u() + featherUVMap.get(Direction.NORTH).uvSize().u(), featherUVMap.get(Direction.NORTH).uv().v() + featherUVMap.get(Direction.NORTH).uvSize().v(), pTexWidthScaled, pTexHeightScaled, pMirror, Direction.NORTH);
+            }
+            if (visibleFaces.contains(Direction.WEST)) {
+                this.feathers[i++] = new Feather(new Barb[]{ducling$barb3, ducling$barb7, ducling$barb2, ducling$barb6}, featherUVMap.get(Direction.WEST).uv().u(), featherUVMap.get(Direction.WEST).uv().v(), featherUVMap.get(Direction.WEST).uv().u() + featherUVMap.get(Direction.WEST).uvSize().u(), featherUVMap.get(Direction.WEST).uv().v() + featherUVMap.get(Direction.WEST).uvSize().v(), pTexWidthScaled, pTexHeightScaled, pMirror, Direction.EAST);
             }
             if (visibleFaces.contains(Direction.SOUTH)) {
-                this.feathers[i] = new Feather(new Barb[]{ducling$barb3, ducling$barb4, ducling$barb5, ducling$barb6}, featherUVMap.get(Direction.SOUTH).uv().u(), featherUVMap.get(Direction.SOUTH).uv().v(), featherUVMap.get(Direction.SOUTH).uv().u() + featherUVMap.get(Direction.SOUTH).uvSize().u(), featherUVMap.get(Direction.SOUTH).uv().v() + featherUVMap.get(Direction.SOUTH).uvSize().v(), pTexWidthScaled, pTexHeightScaled, pMirror, Direction.SOUTH);
+                this.feathers[i] = new Feather(new Barb[]{ducling$barb4, ducling$barb3, ducling$barb6, ducling$barb5}, featherUVMap.get(Direction.SOUTH).uv().u(), featherUVMap.get(Direction.SOUTH).uv().v(), featherUVMap.get(Direction.SOUTH).uv().u() + featherUVMap.get(Direction.SOUTH).uvSize().u(), featherUVMap.get(Direction.SOUTH).uv().v() + featherUVMap.get(Direction.SOUTH).uvSize().v(), pTexWidthScaled, pTexHeightScaled, pMirror, Direction.SOUTH);
             }
         }
 
@@ -417,7 +417,7 @@ public final class Ducling extends ModelPart{
          * render the wing
          */
         @Override
-        public void compile(PoseStack.Pose pPose, @NotNull VertexConsumer pVertexConsumer, int pPackedLight, int pPackedOverlay, float pRed, float pGreen, float pBlue, float pAlpha) {
+        public void compile(PoseStack.Pose pPose, @NotNull VertexConsumer pVertexConsumer, int pPackedLight, int pPackedOverlay, int color) {
             Matrix4f matrix4f = pPose.pose();
             Matrix3f matrix3f = pPose.normal();
 
@@ -432,7 +432,7 @@ public final class Ducling extends ModelPart{
                     float f4 = ducling$barb.pos.y() / 16.0F;
                     float f5 = ducling$barb.pos.z() / 16.0F;
                     Vector4f vector4f = matrix4f.transform(new Vector4f(f3, f4, f5, 1.0F));
-                    pVertexConsumer.vertex(vector4f.x(), vector4f.y(), vector4f.z(), pRed, pGreen, pBlue, pAlpha, ducling$barb.u, ducling$barb.v, pPackedOverlay, pPackedLight, f, f1, f2);
+                    pVertexConsumer.addVertex(vector4f.x(), vector4f.y(), vector4f.z(), color, ducling$barb.u, ducling$barb.v, pPackedOverlay, pPackedLight, f, f1, f2);
                 }
             }
 

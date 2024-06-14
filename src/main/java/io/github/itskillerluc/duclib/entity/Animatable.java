@@ -1,11 +1,11 @@
 package io.github.itskillerluc.duclib.entity;
 
-import cpw.mods.util.Lazy;
 import io.github.itskillerluc.duclib.client.animation.DucAnimation;
 import io.github.itskillerluc.duclib.client.model.AnimatableDucModel;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.AnimationState;
 import net.minecraft.world.entity.LivingEntity;
+import net.neoforged.neoforge.common.util.Lazy;
 import org.apache.logging.log4j.LogManager;
 
 import java.util.Map;

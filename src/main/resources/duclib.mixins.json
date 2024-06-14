@@ -2,10 +2,10 @@
   "required": true,
   "package" : "io.github.itskillerluc.duclib.mixin",
   "compatibilityLevel": "JAVA_17",
-  "refmap": "mixins.duclib.refmap.json",
   "client" : [
     "LayerDefinitionsMixin",
-    "SimpleReloadInstanceMixin"
+    "SimpleReloadInstanceMixin",
+    "KeyFrameMixin"
   ],
   "Injectors": {
     "defaultRequire" : 1

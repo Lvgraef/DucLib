@@ -1,15 +1,17 @@
 package io.github.itskillerluc.duclib.client.animation;
 
-import cpw.mods.util.Lazy;
+import com.mojang.datafixers.util.Either;
 import io.github.itskillerluc.duclib.data.animation.DucLibAnimationLoader;
 import io.github.itskillerluc.duclib.data.animation.serializers.Animation;
 import io.github.itskillerluc.duclib.data.animation.serializers.Bone;
 import io.github.itskillerluc.duclib.data.animation.serializers.KeyFrame;
+import io.github.itskillerluc.duclib.util.IAdvancedKeyFrame;
+import it.unimi.dsi.fastutil.doubles.Double2DoubleFunction;
 import net.minecraft.client.animation.AnimationChannel;
 import net.minecraft.client.animation.AnimationDefinition;
 import net.minecraft.client.animation.Keyframe;
-import net.minecraft.client.animation.KeyframeAnimations;
 import net.minecraft.resources.ResourceLocation;
+import net.neoforged.neoforge.common.util.Lazy;
 import org.joml.Vector3f;
 
 import java.util.*;
@@ -92,9 +94,13 @@ public abstract class DucAnimation {
      * @param target position to move to
      * @return the keyframe
      */
-    private static Keyframe createKeyFrame(int i, List<Map.Entry<String, KeyFrame>> entries, Vector3f target) {
-        return new Keyframe(Float.parseFloat(entries.get(i).getKey()),
-                target, entries.get(i).getValue().lerpMode() != null && entries.get(i).getValue().lerpMode().equals("catmullrom") ? AnimationChannel.Interpolations.CATMULLROM : AnimationChannel.Interpolations.LINEAR);
+    private static Keyframe createKeyFrame(int i, List<Map.Entry<String, KeyFrame>> entries, List<Either<Double, Double2DoubleFunction>> target, AnimationChannel.Target channel) {
+        if (target.size() != 3) return null;
+        Vector3f vector = new Vector3f(0, 0, 0);
+        var frame = new Keyframe(Float.parseFloat(entries.get(i).getKey()),
+                vector, entries.get(i).getValue().lerpMode() != null && entries.get(i).getValue().lerpMode().equals("catmullrom") ? AnimationChannel.Interpolations.CATMULLROM : AnimationChannel.Interpolations.LINEAR);
+
+        return getKeyframe(target, channel, vector, frame);
     }
 
 
@@ -107,38 +113,15 @@ public abstract class DucAnimation {
      * @return the keyframe
      */
     private static Keyframe createKeyFrameFor(int i, List<Map.Entry<String, KeyFrame>> entries, boolean pre, AnimationChannel.Target channel){
-        if (channel == AnimationChannel.Targets.ROTATION) {
-            double[] vector = entries.get(i).getValue().pre();
-            if (pre) {
-                if (vector != null) {
-                    return createPreKeyFrame(i, entries, KeyframeAnimations.degreeVec(((float) entries.get(i).getValue().pre()[0]), (float) entries.get(i).getValue().pre()[1], (float) entries.get(i).getValue().pre()[2]));
-                } else {
-                    return null;
-                }
-            } else {
-                return createKeyFrame(i, entries, KeyframeAnimations.degreeVec(((float) entries.get(i).getValue().post()[0]), ((float) entries.get(i).getValue().post()[1]), ((float) entries.get(i).getValue().post()[2])));
-            }
-        }
-        if (channel == AnimationChannel.Targets.SCALE){
-            double[] vector = entries.get(i).getValue().pre();
-            if (pre) {
-                if (vector != null) {
-                    return createPreKeyFrame(i, entries, KeyframeAnimations.scaleVec(((float) entries.get(i).getValue().pre()[0]), (float) entries.get(i).getValue().pre()[1], (float) entries.get(i).getValue().pre()[2]));
-                } else {
-                    return null;
-                }
-            }
-            return createKeyFrame(i, entries, KeyframeAnimations.scaleVec(((float) entries.get(i).getValue().post()[0]), ((float) entries.get(i).getValue().post()[1]), ((float) entries.get(i).getValue().post()[2])));
-        }
-        double[] vector = entries.get(i).getValue().pre();
+        List<Either<Double, Double2DoubleFunction>> vector = entries.get(i).getValue().pre();
         if (pre) {
             if (vector != null) {
-                return createPreKeyFrame(i, entries, KeyframeAnimations.posVec(((float) entries.get(i).getValue().pre()[0]), (float) entries.get(i).getValue().pre()[1], (float) entries.get(i).getValue().pre()[2]));
+                return createPreKeyFrame(i, entries, entries.get(i).getValue().pre(), channel);
             } else {
                 return null;
             }
         }
-        return createKeyFrame(i, entries, KeyframeAnimations.posVec(((float) entries.get(i).getValue().post()[0]), ((float) entries.get(i).getValue().post()[1]), ((float) entries.get(i).getValue().post()[2])));
+        return createKeyFrame(i, entries, entries.get(i).getValue().post(), channel);
     }
 
     /**
@@ -148,13 +131,38 @@ public abstract class DucAnimation {
      * @param target position to move to
      * @return the keyframe
      */
-    private static Keyframe createPreKeyFrame(int i, List<Map.Entry<String, KeyFrame>> entries, Vector3f target){
-        double[] vector = entries.get(i).getValue().pre();
-        if (vector == null){
-            return null;
+    private static Keyframe createPreKeyFrame(int i, List<Map.Entry<String, KeyFrame>> entries, List<Either<Double, Double2DoubleFunction>> target, AnimationChannel.Target channel){
+        if (target.size() != 3) return null;
+        Vector3f vector = new Vector3f(0, 0, 0);
+        var frame = new Keyframe(Float.parseFloat(entries.get(i).getKey()),
+                vector, AnimationChannel.Interpolations.LINEAR);
+
+        return getKeyframe(target, channel, vector, frame);
+    }
+
+    private static Keyframe getKeyframe(List<Either<Double, Double2DoubleFunction>> target, AnimationChannel.Target channel, Vector3f vector, Keyframe frame) {
+        Double2DoubleFunction processingFunction;
+        Double2DoubleFunction processingFunctionY;
+
+        if (channel == AnimationChannel.Targets.ROTATION) {
+            processingFunction = input -> input * Math.PI / 180.0;
+            processingFunctionY = input -> input * Math.PI / 180.0;
+        } else if (channel == AnimationChannel.Targets.POSITION){
+            processingFunction = input -> input;
+            processingFunctionY = input -> -input;
+        } else {
+            processingFunction = input -> input - 1;
+            processingFunctionY = input -> input - 1;
         }
-        return new Keyframe(Float.parseFloat(entries.get(i).getKey()),
-                target, AnimationChannel.Interpolations.LINEAR);
+
+        target.get(0).ifLeft(left -> vector.x = left.floatValue())
+                .ifRight(right -> ((IAdvancedKeyFrame) (Object) frame).setFunctionX(right.andThenDouble(processingFunction)));
+        target.get(1).ifLeft(left -> vector.y = left.floatValue())
+                .ifRight(right -> ((IAdvancedKeyFrame) (Object) frame).setFunctionY(right.andThenDouble(processingFunctionY)));
+        target.get(2).ifLeft(left -> vector.z = left.floatValue())
+                .ifRight(right -> ((IAdvancedKeyFrame) (Object) frame).setFunctionZ(right.andThenDouble(processingFunction)));
+
+        return frame;
     }
 
 
