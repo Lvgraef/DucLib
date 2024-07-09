@@ -155,11 +155,11 @@ public abstract class DucAnimation {
             processingFunctionY = input -> input - 1;
         }
 
-        target.get(0).ifLeft(left -> vector.x = left.floatValue())
+        target.get(0).ifLeft(left -> vector.x = ((float) processingFunction.get(left.doubleValue())))
                 .ifRight(right -> ((IAdvancedKeyFrame) (Object) frame).setFunctionX(right.andThenDouble(processingFunction)));
-        target.get(1).ifLeft(left -> vector.y = left.floatValue())
+        target.get(1).ifLeft(left -> vector.y = ((float) processingFunctionY.get(left.doubleValue())))
                 .ifRight(right -> ((IAdvancedKeyFrame) (Object) frame).setFunctionY(right.andThenDouble(processingFunctionY)));
-        target.get(2).ifLeft(left -> vector.z = left.floatValue())
+        target.get(2).ifLeft(left -> vector.z = ((float) processingFunction.get(left.doubleValue())))
                 .ifRight(right -> ((IAdvancedKeyFrame) (Object) frame).setFunctionZ(right.andThenDouble(processingFunction)));
 
         return frame;

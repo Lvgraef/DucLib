@@ -30,7 +30,7 @@ public record Bone(Map<String, KeyFrame> rotation, Map<String, KeyFrame> positio
                         positions.put(position.getKey().equals("vector") ? "0.0" : position.getKey(), KeyFrame.deserialize(position.getValue()));
                     }
                 } else {
-                    rotations.put("0.0", KeyFrame.deserialize(json.getAsJsonObject().get("position")));
+                    positions.put("0.0", KeyFrame.deserialize(json.getAsJsonObject().get("position")));
                 }
             }
             if (json.getAsJsonObject().get("scale") != null) {
@@ -39,7 +39,7 @@ public record Bone(Map<String, KeyFrame> rotation, Map<String, KeyFrame> positio
                         scales.put(scale.getKey().equals("vector") ? "0.0" : scale.getKey(), KeyFrame.deserialize(scale.getValue()));
                     }
                 } else {
-                    rotations.put("0.0", KeyFrame.deserialize(json.getAsJsonObject().get("scale")));
+                    scales.put("0.0", KeyFrame.deserialize(json.getAsJsonObject().get("scale")));
                 }
             }
             return new Bone(rotations, positions, scales);

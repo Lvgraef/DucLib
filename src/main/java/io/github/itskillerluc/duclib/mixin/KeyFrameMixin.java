@@ -53,7 +53,7 @@ public class KeyFrameMixin implements IAdvancedKeyFrame {
         }
         if (zFunction != null) {
             float time = ((float) timeSupplier.getAsDouble());
-            target.z = ((float) yFunction.applyAsDouble(time));
+            target.z = ((float) zFunction.applyAsDouble(time));
         }
         return target;
     }
