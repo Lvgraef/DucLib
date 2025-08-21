@@ -1,5 +1,6 @@
 package io.github.itskillerluc.duclib.mixin;
 
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import io.github.itskillerluc.duclib.client.model.definitions.*;
 import io.github.itskillerluc.duclib.data.model.DucLibModelLoader;
 import io.github.itskillerluc.duclib.data.model.serializers.Bone;
@@ -15,11 +16,8 @@ import net.minecraft.client.model.geom.builders.UVPair;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import org.spongepowered.asm.mixin.Debug;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -29,14 +27,14 @@ import java.util.stream.Collectors;
  */
 @Mixin(LayerDefinitions.class)
 public class LayerDefinitionsMixin {
-    @Inject(method = "Lnet/minecraft/client/model/geom/LayerDefinitions;createRoots()Ljava/util/Map;",at = @At("TAIL"), cancellable = true)
-    private static void injected(CallbackInfoReturnable<Map<ModelLayerLocation, LayerDefinition>> cir){
-        Map<ModelLayerLocation, LayerDefinition> map = new HashMap<>(cir.getReturnValue());
+    @ModifyReturnValue(method = "createRoots()Ljava/util/Map;",at = @At("TAIL"))
+    private static Map<ModelLayerLocation, LayerDefinition> injected(Map<ModelLayerLocation, LayerDefinition> original){
+        Map<ModelLayerLocation, LayerDefinition> map = new HashMap<>(original);
         for (Map.Entry<ResourceLocation, GeometryHolder> resourceLocationGeometryHolderEntry : DucLibModelLoader.getOverrides().entrySet()) {
-            var key = cir.getReturnValue().keySet().stream().filter(i -> i.getModel().equals(resourceLocationGeometryHolderEntry.getKey())).findFirst();
+            var key = original.keySet().stream().filter(i -> i.getModel().equals(resourceLocationGeometryHolderEntry.getKey())).findFirst();
             key.ifPresent(modelLayerLocation -> map.replace(modelLayerLocation, generateLakeDefinition(resourceLocationGeometryHolderEntry.getKey())));
         }
-        cir.setReturnValue(map);
+        return map;
     }
 
     private static LakeDefinition generateLakeDefinition(ResourceLocation entity){

@@ -324,22 +324,22 @@ public final class Ducling extends ModelPart{
             int i = 0;
             Map<Direction, AdvancedUV> featherUVMap = Arrays.stream(featherUVs).collect(Collectors.toMap(AdvancedUV::direction, value -> value));
             if (visibleFaces.contains(Direction.UP)) {
-                this.feathers[i++] = new Feather(new Barb[]{ducling$barb4, ducling$barb3, ducling$barb7, ducling$barb}, featherUVMap.get(Direction.UP).uv().u(), featherUVMap.get(Direction.UP).uv().v(), featherUVMap.get(Direction.UP).uv().u() + featherUVMap.get(Direction.UP).uvSize().u(), featherUVMap.get(Direction.UP).uv().v() + featherUVMap.get(Direction.UP).uvSize().v(), pTexWidthScaled, pTexHeightScaled, !pMirror, Direction.DOWN);
+                this.feathers[i++] = new Feather(new Barb[]{ducling$barb4, ducling$barb3, ducling$barb7, ducling$barb}, featherUVMap.get(Direction.UP).uv().u(), featherUVMap.get(Direction.UP).uv().v(), featherUVMap.get(Direction.UP).uv().u() + featherUVMap.get(Direction.UP).uvSize().u(), featherUVMap.get(Direction.UP).uv().v() + featherUVMap.get(Direction.UP).uvSize().v(), pTexWidthScaled, pTexHeightScaled, pMirror, Direction.DOWN);
             }
             if (visibleFaces.contains(Direction.DOWN)) {
-                this.feathers[i++] = new Feather(new Barb[]{ducling$barb1, ducling$barb2, ducling$barb6, ducling$barb5}, featherUVMap.get(Direction.DOWN).uv().u(), featherUVMap.get(Direction.DOWN).uv().v(), featherUVMap.get(Direction.DOWN).uv().u() + featherUVMap.get(Direction.DOWN).uvSize().u(), featherUVMap.get(Direction.DOWN).uv().v() + featherUVMap.get(Direction.DOWN).uvSize().v(), pTexWidthScaled, pTexHeightScaled, !pMirror, Direction.UP);
+                this.feathers[i++] = new Feather(new Barb[]{ducling$barb1, ducling$barb2, ducling$barb6, ducling$barb5}, featherUVMap.get(Direction.DOWN).uv().u(), featherUVMap.get(Direction.DOWN).uv().v(), featherUVMap.get(Direction.DOWN).uv().u() + featherUVMap.get(Direction.DOWN).uvSize().u(), featherUVMap.get(Direction.DOWN).uv().v() + featherUVMap.get(Direction.DOWN).uvSize().v(), pTexWidthScaled, pTexHeightScaled, pMirror, Direction.UP);
             }
             if (visibleFaces.contains(Direction.EAST)) {
-                this.feathers[i++] = new Feather(new Barb[]{ducling$barb, ducling$barb4, ducling$barb5, ducling$barb1}, featherUVMap.get(Direction.EAST).uv().u(), featherUVMap.get(Direction.EAST).uv().v(), featherUVMap.get(Direction.EAST).uv().u() + featherUVMap.get(Direction.EAST).uvSize().u(), featherUVMap.get(Direction.EAST).uv().v() + featherUVMap.get(Direction.EAST).uvSize().v(), pTexWidthScaled, pTexHeightScaled, pMirror, Direction.WEST);
+                this.feathers[i++] = new Feather(new Barb[]{ducling$barb, ducling$barb4, ducling$barb5, ducling$barb1}, featherUVMap.get(Direction.EAST).uv().u(), featherUVMap.get(Direction.EAST).uv().v(), featherUVMap.get(Direction.EAST).uv().u() + featherUVMap.get(Direction.EAST).uvSize().u(), featherUVMap.get(Direction.EAST).uv().v() + featherUVMap.get(Direction.EAST).uvSize().v(), pTexWidthScaled, pTexHeightScaled, !pMirror, Direction.WEST);
             }
             if (visibleFaces.contains(Direction.NORTH)) {
-                this.feathers[i++] = new Feather(new Barb[]{ducling$barb7, ducling$barb, ducling$barb1, ducling$barb2}, featherUVMap.get(Direction.NORTH).uv().u(), featherUVMap.get(Direction.NORTH).uv().v(), featherUVMap.get(Direction.NORTH).uv().u() + featherUVMap.get(Direction.NORTH).uvSize().u(), featherUVMap.get(Direction.NORTH).uv().v() + featherUVMap.get(Direction.NORTH).uvSize().v(), pTexWidthScaled, pTexHeightScaled, pMirror, Direction.NORTH);
+                this.feathers[i++] = new Feather(new Barb[]{ducling$barb7, ducling$barb, ducling$barb1, ducling$barb2}, featherUVMap.get(Direction.NORTH).uv().u(), featherUVMap.get(Direction.NORTH).uv().v(), featherUVMap.get(Direction.NORTH).uv().u() + featherUVMap.get(Direction.NORTH).uvSize().u(), featherUVMap.get(Direction.NORTH).uv().v() + featherUVMap.get(Direction.NORTH).uvSize().v(), pTexWidthScaled, pTexHeightScaled, !pMirror, Direction.NORTH);
             }
             if (visibleFaces.contains(Direction.WEST)) {
-                this.feathers[i++] = new Feather(new Barb[]{ducling$barb3, ducling$barb7, ducling$barb2, ducling$barb6}, featherUVMap.get(Direction.WEST).uv().u(), featherUVMap.get(Direction.WEST).uv().v(), featherUVMap.get(Direction.WEST).uv().u() + featherUVMap.get(Direction.WEST).uvSize().u(), featherUVMap.get(Direction.WEST).uv().v() + featherUVMap.get(Direction.WEST).uvSize().v(), pTexWidthScaled, pTexHeightScaled, pMirror, Direction.EAST);
+                this.feathers[i++] = new Feather(new Barb[]{ducling$barb3, ducling$barb7, ducling$barb2, ducling$barb6}, featherUVMap.get(Direction.WEST).uv().u(), featherUVMap.get(Direction.WEST).uv().v(), featherUVMap.get(Direction.WEST).uv().u() + featherUVMap.get(Direction.WEST).uvSize().u(), featherUVMap.get(Direction.WEST).uv().v() + featherUVMap.get(Direction.WEST).uvSize().v(), pTexWidthScaled, pTexHeightScaled, !pMirror, Direction.EAST);
             }
             if (visibleFaces.contains(Direction.SOUTH)) {
-                this.feathers[i] = new Feather(new Barb[]{ducling$barb4, ducling$barb3, ducling$barb6, ducling$barb5}, featherUVMap.get(Direction.SOUTH).uv().u(), featherUVMap.get(Direction.SOUTH).uv().v(), featherUVMap.get(Direction.SOUTH).uv().u() + featherUVMap.get(Direction.SOUTH).uvSize().u(), featherUVMap.get(Direction.SOUTH).uv().v() + featherUVMap.get(Direction.SOUTH).uvSize().v(), pTexWidthScaled, pTexHeightScaled, pMirror, Direction.SOUTH);
+                this.feathers[i] = new Feather(new Barb[]{ducling$barb4, ducling$barb3, ducling$barb6, ducling$barb5}, featherUVMap.get(Direction.SOUTH).uv().u(), featherUVMap.get(Direction.SOUTH).uv().v(), featherUVMap.get(Direction.SOUTH).uv().u() + featherUVMap.get(Direction.SOUTH).uvSize().u(), featherUVMap.get(Direction.SOUTH).uv().v() + featherUVMap.get(Direction.SOUTH).uvSize().v(), pTexWidthScaled, pTexHeightScaled, !pMirror, Direction.SOUTH);
             }
         }
 
@@ -388,27 +388,27 @@ public final class Ducling extends ModelPart{
             float f12 = (float)pTexCoordV + pDimensionZ + pDimensionY;
             int i = 0;
             if (visibleFaces.contains(Direction.DOWN)) {
-                this.feathers[i++] = new Ducling.Feather(new Ducling.Barb[]{ducling$barb4, ducling$barb3, ducling$barb7, ducling$barb}, f5, f10, f6, f11, pTexWidthScaled, pTexHeightScaled, pMirror, Direction.DOWN);
+                this.feathers[i++] = new Feather(new Barb[]{ducling$barb4, ducling$barb3, ducling$barb7, ducling$barb}, f5, f10, f6, f11, pTexWidthScaled, pTexHeightScaled, pMirror, Direction.DOWN);
             }
 
             if (visibleFaces.contains(Direction.UP)) {
-                this.feathers[i++] = new Ducling.Feather(new Ducling.Barb[]{ducling$barb1, ducling$barb2, ducling$barb6, ducling$barb5}, f6, f11, f7, f10, pTexWidthScaled, pTexHeightScaled, pMirror, Direction.UP);
+                this.feathers[i++] = new Feather(new Barb[]{ducling$barb1, ducling$barb2, ducling$barb6, ducling$barb5}, f6, f11, f7, f10, pTexWidthScaled, pTexHeightScaled, pMirror, Direction.UP);
             }
 
             if (visibleFaces.contains(Direction.WEST)) {
-                this.feathers[i++] = new Ducling.Feather(new Ducling.Barb[]{ducling$barb7, ducling$barb3, ducling$barb6, ducling$barb2}, f4, f11, f5, f12, pTexWidthScaled, pTexHeightScaled, pMirror, Direction.WEST);
+                this.feathers[i++] = new Feather(new Barb[]{ducling$barb7, ducling$barb3, ducling$barb6, ducling$barb2}, f4, f11, f5, f12, pTexWidthScaled, pTexHeightScaled, pMirror, Direction.WEST);
             }
 
             if (visibleFaces.contains(Direction.NORTH)) {
-                this.feathers[i++] = new Ducling.Feather(new Ducling.Barb[]{ducling$barb, ducling$barb7, ducling$barb2, ducling$barb1}, f5, f11, f6, f12, pTexWidthScaled, pTexHeightScaled, pMirror, Direction.NORTH);
+                this.feathers[i++] = new Feather(new Barb[]{ducling$barb, ducling$barb7, ducling$barb2, ducling$barb1}, f5, f11, f6, f12, pTexWidthScaled, pTexHeightScaled, pMirror, Direction.NORTH);
             }
 
             if (visibleFaces.contains(Direction.EAST)) {
-                this.feathers[i++] = new Ducling.Feather(new Ducling.Barb[]{ducling$barb4, ducling$barb, ducling$barb1, ducling$barb5}, f6, f11, f8, f12, pTexWidthScaled, pTexHeightScaled, pMirror, Direction.EAST);
+                this.feathers[i++] = new Feather(new Barb[]{ducling$barb4, ducling$barb, ducling$barb1, ducling$barb5}, f6, f11, f8, f12, pTexWidthScaled, pTexHeightScaled, pMirror, Direction.EAST);
             }
 
             if (visibleFaces.contains(Direction.SOUTH)) {
-                this.feathers[i] = new Ducling.Feather(new Ducling.Barb[]{ducling$barb3, ducling$barb4, ducling$barb5, ducling$barb6}, f8, f11, f9, f12, pTexWidthScaled, pTexHeightScaled, pMirror, Direction.SOUTH);
+                this.feathers[i] = new Feather(new Barb[]{ducling$barb3, ducling$barb4, ducling$barb5, ducling$barb6}, f8, f11, f9, f12, pTexWidthScaled, pTexHeightScaled, pMirror, Direction.SOUTH);
             }
         }
 
@@ -419,20 +419,20 @@ public final class Ducling extends ModelPart{
         @Override
         public void compile(PoseStack.Pose pPose, @NotNull VertexConsumer pVertexConsumer, int pPackedLight, int pPackedOverlay, int color) {
             Matrix4f matrix4f = pPose.pose();
-            Matrix3f matrix3f = pPose.normal();
+            Vector3f vector3f = new Vector3f();
 
             for(Feather ducling$feather : this.feathers) {
-                Vector3f vector3f = matrix3f.transform(new Vector3f(ducling$feather.normal));
-                float f = vector3f.x();
-                float f1 = vector3f.y();
-                float f2 = vector3f.z();
+                Vector3f vector3f1 = pPose.transformNormal(ducling$feather.normal, vector3f);
+                float f = vector3f1.x();
+                float f1 = vector3f1.y();
+                float f2 = vector3f1.z();
 
                 for(Barb ducling$barb : ducling$feather.vertices) {
                     float f3 = ducling$barb.pos.x() / 16.0F;
                     float f4 = ducling$barb.pos.y() / 16.0F;
                     float f5 = ducling$barb.pos.z() / 16.0F;
-                    Vector4f vector4f = matrix4f.transform(new Vector4f(f3, f4, f5, 1.0F));
-                    pVertexConsumer.addVertex(vector4f.x(), vector4f.y(), vector4f.z(), color, ducling$barb.u, ducling$barb.v, pPackedOverlay, pPackedLight, f, f1, f2);
+                    Vector3f vector3f2 = matrix4f.transformPosition(f3, f4, f5, vector3f);
+                    pVertexConsumer.addVertex(vector3f2.x(), vector3f2.y(), vector3f2.z(), color, ducling$barb.u, ducling$barb.v, pPackedOverlay, pPackedLight, f, f1, f2);
                 }
             }
 
@@ -451,11 +451,13 @@ public final class Ducling extends ModelPart{
 
         public Feather(Barb[] pVertices, float x1, float y1, float x2, float y2, float textureWidth, float textureHeight, boolean mirror, Direction pDirection) {
             this.vertices = pVertices;
-            pVertices[0] = pVertices[0].remap(x2 / textureWidth, y1 / textureHeight);
-            pVertices[1] = pVertices[1].remap(x1 / textureWidth, y1 / textureHeight);
-            pVertices[2] = pVertices[2].remap(x1 / textureWidth, y2 / textureHeight);
-            pVertices[3] = pVertices[3].remap(x2 / textureWidth, y2 / textureHeight);
-            if (!mirror) {
+            float f = 0.0F / textureWidth;
+            float f1 = 0.0F / textureHeight;
+            pVertices[0] = pVertices[0].remap(x2 / textureWidth -f, y1 / textureHeight +f1);
+            pVertices[1] = pVertices[1].remap(x1 / textureWidth +f, y1 / textureHeight +f1);
+            pVertices[2] = pVertices[2].remap(x1 / textureWidth +f, y2 / textureHeight -f1);
+            pVertices[3] = pVertices[3].remap(x2 / textureWidth -f, y2 / textureHeight -f1);
+            if (mirror) {
                 int i = pVertices.length;
 
                 for(int j = 0; j < i / 2; ++j) {
@@ -466,7 +468,7 @@ public final class Ducling extends ModelPart{
             }
 
             this.normal = pDirection.step();
-            if (!mirror) {
+            if (mirror) {
                 this.normal.mul(-1.0F, 1.0F, 1.0F);
             }
 

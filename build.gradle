@@ -7,7 +7,7 @@ plugins {
 }
 
 
-version = '1.2.0'
+version = '1.2.1'
 group = 'io.github.itskillerluc.duclib' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'duclib-1.21-neoforge'
 
